@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.json.JSONObject;
+
 class ReactAdView extends ReactViewGroup {
 
     protected AdView adView;
@@ -247,7 +249,14 @@ public class RNAdMobBannerViewManager extends ViewGroupManager<ReactAdView> {
             case "smartBanner":
                 return AdSize.SMART_BANNER;
             default:
-                return AdSize.BANNER;
+                JsonObject jsonObject = new JsonObject(adSize);
+                int width = jsonObject.optInt("w", 0);
+                int height = jsonObject.optInt("h", 0);
+
+                if (width == 0 && height == 0)
+                    return AdSize.BANNER;
+
+                return new AdSize(width, height);
         }
     }
 
