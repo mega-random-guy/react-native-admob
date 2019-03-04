@@ -249,14 +249,18 @@ public class RNAdMobBannerViewManager extends ViewGroupManager<ReactAdView> {
             case "smartBanner":
                 return AdSize.SMART_BANNER;
             default:
-                JsonObject jsonObject = new JsonObject(adSize);
-                int width = jsonObject.optInt("w", 0);
-                int height = jsonObject.optInt("h", 0);
+                try {
+                    JSONObject jsonObject = new JSONObject(adSize);
+                    int width = jsonObject.optInt("w", 0);
+                    int height = jsonObject.optInt("h", 0);
 
-                if (width == 0 && height == 0)
+                    if (width == 0 && height == 0)
+                        return AdSize.BANNER;
+
+                    return new AdSize(width, height);
+                } catch (JSONException e) {
                     return AdSize.BANNER;
-
-                return new AdSize(width, height);
+                }
         }
     }
 
