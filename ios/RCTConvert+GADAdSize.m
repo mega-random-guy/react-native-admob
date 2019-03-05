@@ -23,9 +23,22 @@
         return kGADAdSizeSmartBannerPortrait;
     } else if ([adSize isEqualToString:@"smartBannerLandscape"]) {
         return kGADAdSizeSmartBannerLandscape;
-    }
-    else {
-        return kGADAdSizeInvalid;
+    } else {
+		NSData *jsonData = [json dataUsingEncoding:NSUTF8StringEncoding];
+		NSError *error;
+		
+		NSMutableDictionary *jsonDict = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:&error];
+		
+		if (error) {
+			return kGADAdSizeInvalid;
+		}
+		
+		NSString *width =[jsonDict objectForKey:@"w"];
+		NSString *height = [jsonDict objectForKey:@"h"];
+		
+		NSString *joinedSize = [NSString stringWithFormat:@"{%@,%@}", width , height];
+		
+		return GADAdSizeFromCGSize(CGSizeFromString(joinedSize));
     }
 }
 
